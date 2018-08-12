@@ -115,7 +115,7 @@ def default_build():
 
     locale_files = []
     for f in _locale_files:
-        locale_files.append(("share/chirp/%s" % os.path.dirname(f), [f]))
+        locale_files.append(("share/%s" % os.path.dirname(f), [f]))
 
     print "LOC: %s" % str(locale_files)
 

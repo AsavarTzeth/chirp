@@ -249,6 +249,7 @@ class Platform:
         share_candidates = [
             os.path.join(execpath, "share"),
             os.path.join(sys.prefix, "share"),
+            "/app/share",
             "/usr/local/share",
             "/usr/share",
         ]
