@@ -15,6 +15,7 @@
 
 import os
 import sys
+import glib
 import glob
 import re
 import logging
@@ -88,11 +89,21 @@ class Platform:
 
     def config_dir(self):
         """Return the preferred configuration file directory"""
-        return self._base
+        if sys.platform.startswith("linux"):
+            return os.path.join(glib.get_user_config_dir(),"chirp")
+        else:
+            return self._base
+
+    def data_dir(self):
+        """Return the preferred data file directory"""
+        if sys.platform.startswith("linux"):
+            return os.path.join(glib.get_user_data_dir(),"chirp")
+        else:
+            return self._base
 
     def log_dir(self):
         """Return the preferred log file directory"""
-        logdir = os.path.join(self.config_dir(), "logs")
+        logdir = os.path.join(self.data_dir(), "logs")
         if not os.path.isdir(logdir):
             os.mkdir(logdir)
 
@@ -275,6 +286,7 @@ def _unix_editor():
 class UnixPlatform(Platform):
     """A platform module suitable for UNIX systems"""
     def __init__(self, basepath):
+
         if not basepath:
             basepath = os.path.abspath(os.path.join(self.default_dir(),
                                                     ".chirp"))
@@ -478,6 +490,7 @@ def _do_test():
     __pform = get_platform()
 
     print "Config dir: %s" % __pform.config_dir()
+    print "Data dir: %s" % __pform.data_dir()
     print "Default dir: %s" % __pform.default_dir()
     print "Log file (foo): %s" % __pform.log_file("foo")
     print "Serial ports: %s" % __pform.list_serial_ports()
