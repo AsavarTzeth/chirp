@@ -565,7 +565,7 @@ of file.
         stock_dir = platform.get_platform().config_file("stock_configs")
         if not os.path.isdir(stock_dir):
             try:
-                os.mkdir(stock_dir)
+                os.makedirs(stock_dir)
             except Exception, e:
                 LOG.error("Unable to create directory: %s" % stock_dir)
                 return
