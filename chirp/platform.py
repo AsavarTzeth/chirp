@@ -15,10 +15,13 @@
 
 import os
 import sys
-import glib
 import glob
 import re
 import logging
+
+import gi
+from gi.repository import GLib
+
 from subprocess import Popen
 
 LOG = logging.getLogger(__name__)
@@ -90,14 +93,14 @@ class Platform:
     def config_dir(self):
         """Return the preferred configuration file directory"""
         if sys.platform.startswith("linux"):
-            return os.path.join(glib.get_user_config_dir(),"chirp")
+            return os.path.join(GLib.get_user_config_dir(),"chirp")
         else:
             return self._base
 
     def data_dir(self):
         """Return the preferred data file directory"""
         if sys.platform.startswith("linux"):
-            return os.path.join(glib.get_user_data_dir(),"chirp")
+            return os.path.join(GLib.get_user_data_dir(),"chirp")
         else:
             return self._base
 
