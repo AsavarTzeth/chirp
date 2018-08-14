@@ -141,6 +141,11 @@ class Platform:
 
     def gui_open_file(self, start_dir=None, types=[]):
         """Prompt the user to pick a file to open"""
+        # Compatibility Layer (temporary)
+        from gi import pygtkcompat
+        pygtkcompat.enable()
+        pygtkcompat.enable_gtk(version='3.0')
+
         import gtk
 
         if not start_dir:

@@ -13,9 +13,16 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import gtk
-import gobject
 import logging
+
+# Compatibility Layer (temporary)
+from gi import pygtkcompat
+pygtkcompat.enable()
+pygtkcompat.enable_gtk(version='3.0')
+
+import gtk
+
+from gi.repository import GObject
 
 from chirp.ui import common, miscwidgets
 
@@ -27,7 +34,7 @@ WIDGETH = 30
 
 class CallsignEditor(gtk.HBox):
     __gsignals__ = {
-        "changed": (gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE, ()),
+        "changed": (GObject.SignalFlags.RUN_LAST, None, ()),
         }
 
     def _cs_changed(self, listw, callid):
@@ -39,9 +46,9 @@ class CallsignEditor(gtk.HBox):
         return True
 
     def make_list(self, width):
-        cols = [(gobject.TYPE_INT, ""),
-                (gobject.TYPE_INT, ""),
-                (gobject.TYPE_STRING, _("Callsign")),
+        cols = [(GObject.TYPE_INT, ""),
+                (GObject.TYPE_INT, ""),
+                (GObject.TYPE_STRING, _("Callsign")),
                 ]
 
         self.listw = miscwidgets.KeyedListWidget(cols)

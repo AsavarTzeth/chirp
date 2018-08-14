@@ -14,10 +14,17 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import gtk
-import gobject
 import threading
 import logging
+
+# Compatibility Layer (temporary)
+from gi import pygtkcompat
+pygtkcompat.enable()
+pygtkcompat.enable_gtk(version='3.0')
+
+import gtk
+
+from gi.repository import GObject
 
 from chirp import errors, chirp_common
 
@@ -52,7 +59,7 @@ class ShiftDialog(gtk.Dialog):
         self.__prog.set_fraction(prog)
 
     def status(self, msg, prog):
-        gobject.idle_add(self._status, msg, prog)
+        GObject.idle_add(self._status, msg, prog)
 
     def _shift_memories(self, delta, memories):
         count = 0.0
@@ -125,9 +132,9 @@ class ShiftDialog(gtk.Dialog):
 
     def finished(self):
         if self.quiet:
-            gobject.idle_add(self.response, gtk.RESPONSE_OK)
+            GObject.idle_add(self.response, gtk.RESPONSE_OK)
         else:
-            gobject.idle_add(self.set_response_sensitive,
+            GObject.idle_add(self.set_response_sensitive,
                              gtk.RESPONSE_OK, True)
 
     def threadfn(self, newhole, func, *args):

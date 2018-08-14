@@ -1,9 +1,16 @@
-import gtk
-import gobject
 import pango
 import re
 import os
 import logging
+
+# Compatibility Layer (temporary)
+from gi import pygtkcompat
+pygtkcompat.enable()
+pygtkcompat.enable_gtk(version='3.0')
+
+import gtk
+
+from gi.repository import GObject
 
 from chirp import bitwise
 from chirp.ui import common, config
@@ -226,7 +233,7 @@ class RadioBrowser(common.Editor):
     def _build_ui(self):
         self._display = gtk.Table(20, 2)
 
-        self._store = gtk.TreeStore(gobject.TYPE_STRING, gobject.TYPE_PYOBJECT)
+        self._store = gtk.TreeStore(GObject.TYPE_STRING, GObject.TYPE_PYOBJECT)
         self._tree = gtk.TreeView(self._store)
 
         rend = gtk.CellRendererText()

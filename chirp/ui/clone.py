@@ -18,8 +18,14 @@ import threading
 import logging
 import os
 
+# Compatibility Layer (temporary)
+from gi import pygtkcompat
+pygtkcompat.enable()
+pygtkcompat.enable_gtk(version='3.0')
+
 import gtk
-import gobject
+
+from gi.repository import GObject
 
 from chirp import platform, directory, detect, chirp_common
 from chirp.ui import miscwidgets, cloneprog, inputdialog, common, config
@@ -226,7 +232,7 @@ class CloneCancelledException(Exception):
 
 class CloneThread(threading.Thread):
     def __status(self, status):
-        gobject.idle_add(self.__progw.status, status)
+        GObject.idle_add(self.__progw.status, status)
 
     def __init__(self, radio, direction, cb=None, parent=None):
         threading.Thread.__init__(self)
@@ -245,7 +251,7 @@ class CloneThread(threading.Thread):
     def run(self):
         LOG.debug("Clone thread started")
 
-        gobject.idle_add(self.__progw.show)
+        GObject.idle_add(self.__progw.show)
 
         self.__radio.status_fn = self.__status
 
@@ -261,7 +267,7 @@ class CloneThread(threading.Thread):
             LOG.error(_("Clone failed: {error}").format(error=e))
             emsg = e
 
-        gobject.idle_add(self.__progw.hide)
+        GObject.idle_add(self.__progw.hide)
 
         # NB: Compulsory close of the radio's serial connection
         self.__radio.pipe.close()
@@ -269,7 +275,7 @@ class CloneThread(threading.Thread):
         LOG.debug("Clone thread ended")
 
         if self.__cback and not self.__cancelled:
-            gobject.idle_add(self.__cback, self.__radio, emsg)
+            GObject.idle_add(self.__cback, self.__radio, emsg)
 
 
 if __name__ == "__main__":

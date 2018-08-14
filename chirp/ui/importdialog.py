@@ -13,10 +13,17 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import gtk
-import gobject
 import pango
 import logging
+
+# Compatibility Layer (temporary)
+from gi import pygtkcompat
+pygtkcompat.enable()
+pygtkcompat.enable_gtk(version='3.0')
+
+import gtk
+
+from gi.repository import GObject
 
 from chirp import errors, chirp_common, import_logic
 from chirp.drivers import generic_xml
@@ -73,7 +80,7 @@ class ImportMemoryBankJob(common.RadioJob):
         import_logic.import_bank(radio, self.__src_radio,
                                  self.__dst_mem, self.__src_mem)
         if self.cb:
-            gobject.idle_add(self.cb, *self.cb_args)
+            GObject.idle_add(self.cb, *self.cb_args)
 
 
 class ImportDialog(gtk.Dialog):
@@ -290,14 +297,14 @@ class ImportDialog(gtk.Dialog):
     def make_view(self):
         editable = [self.col_nloc, self.col_name, self.col_comm]
 
-        self.__store = gtk.ListStore(gobject.TYPE_BOOLEAN,  # Import
-                                     gobject.TYPE_INT,      # Source loc
-                                     gobject.TYPE_INT,      # Destination loc
-                                     gobject.TYPE_STRING,   # Name
-                                     gobject.TYPE_STRING,   # Frequency
-                                     gobject.TYPE_STRING,   # Comment
-                                     gobject.TYPE_BOOLEAN,
-                                     gobject.TYPE_STRING)
+        self.__store = gtk.ListStore(GObject.TYPE_BOOLEAN,  # Import
+                                     GObject.TYPE_INT,      # Source loc
+                                     GObject.TYPE_INT,      # Destination loc
+                                     GObject.TYPE_STRING,   # Name
+                                     GObject.TYPE_STRING,   # Frequency
+                                     GObject.TYPE_STRING,   # Comment
+                                     GObject.TYPE_BOOLEAN,
+                                     GObject.TYPE_STRING)
         self.__view = gtk.TreeView(self.__store)
         self.__view.show()
 
@@ -306,7 +313,7 @@ class ImportDialog(gtk.Dialog):
         for k in self.caps.keys():
             t = self.types[k]
 
-            if t == gobject.TYPE_BOOLEAN:
+            if t == GObject.TYPE_BOOLEAN:
                 rend = gtk.CellRendererToggle()
                 rend.connect("toggled", self._toggle, k)
                 column = gtk.TreeViewColumn(self.caps[k], rend,
@@ -608,14 +615,14 @@ class ImportDialog(gtk.Dialog):
             }
 
         self.types = {
-            self.col_import:  gobject.TYPE_BOOLEAN,
-            self.col_oloc:    gobject.TYPE_INT,
-            self.col_nloc:    gobject.TYPE_INT,
-            self.col_name:    gobject.TYPE_STRING,
-            self.col_freq:    gobject.TYPE_STRING,
-            self.col_comm:    gobject.TYPE_STRING,
-            self.col_okay:    gobject.TYPE_BOOLEAN,
-            self.col_tmsg:    gobject.TYPE_STRING,
+            self.col_import:  GObject.TYPE_BOOLEAN,
+            self.col_oloc:    GObject.TYPE_INT,
+            self.col_nloc:    GObject.TYPE_INT,
+            self.col_name:    GObject.TYPE_STRING,
+            self.col_freq:    GObject.TYPE_STRING,
+            self.col_comm:    GObject.TYPE_STRING,
+            self.col_okay:    GObject.TYPE_BOOLEAN,
+            self.col_tmsg:    GObject.TYPE_STRING,
             }
 
         self.src_radio = src_radio

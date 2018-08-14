@@ -13,10 +13,17 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import gtk
-import gobject
 import time
 import logging
+
+# Compatibility Layer (temporary)
+from gi import pygtkcompat
+pygtkcompat.enable()
+pygtkcompat.enable_gtk(version='3.0')
+
+import gtk
+
+from gi.repository import GObject
 
 from gobject import TYPE_INT, TYPE_STRING, TYPE_BOOLEAN
 
@@ -39,7 +46,7 @@ class MappingNamesJob(common.RadioJob):
         for mapping in mappings:
             self.__editor.mappings.append((mapping, mapping.get_name()))
 
-        gobject.idle_add(self.cb, *self.cb_args)
+        GObject.idle_add(self.cb, *self.cb_args)
 
 
 class MappingNameEditor(common.Editor):
@@ -88,9 +95,9 @@ class MappingNameEditor(common.Editor):
         self._model = model
         self._type = common.unpluralize(model.get_name())
 
-        types = [(gobject.TYPE_STRING, "key"),
-                 (gobject.TYPE_STRING, self._type),
-                 (gobject.TYPE_STRING, _("Name"))]
+        types = [(GObject.TYPE_STRING, "key"),
+                 (GObject.TYPE_STRING, self._type),
+                 (GObject.TYPE_STRING, _("Name"))]
 
         self.listw = miscwidgets.KeyedListWidget(types)
         self.listw.set_editable(1, True)

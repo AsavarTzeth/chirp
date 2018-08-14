@@ -16,7 +16,6 @@
 
 import threading
 
-import gtk
 import pango
 from gobject import TYPE_INT, \
     TYPE_DOUBLE as TYPE_FLOAT, \
@@ -24,10 +23,18 @@ from gobject import TYPE_INT, \
     TYPE_BOOLEAN, \
     TYPE_PYOBJECT, \
     TYPE_INT64
-import gobject
 import pickle
 import os
 import logging
+
+# Compatibility Layer (temporary)
+from gi import pygtkcompat
+pygtkcompat.enable()
+pygtkcompat.enable_gtk(version='3.0')
+
+import gtk
+
+from gi.repository import GObject
 
 from chirp.ui import common, shiftdialog, miscwidgets, config, memdetail
 from chirp.ui import bandplans
@@ -506,7 +513,7 @@ class MemoryEditor(common.Editor):
             def handler(mem):
                 if not isinstance(mem, Exception):
                     if not mem.empty or self.show_empty:
-                        gobject.idle_add(self.set_memory, mem)
+                        GObject.idle_add(self.set_memory, mem)
 
             job = common.RadioJob(handler, "get_memory", cur_pos)
             job.set_desc(_("Getting memory {number}").format(number=cur_pos))
@@ -586,7 +593,7 @@ class MemoryEditor(common.Editor):
             sel = self.view.get_selection()
             sel.unselect_all()
             for path in paths:
-                gobject.idle_add(sel.select_path, (path[0]+delta,))
+                GObject.idle_add(sel.select_path, (path[0]+delta,))
 
         def save_victim(mem, ctx):
             ctx.victim_mem = mem
@@ -677,7 +684,7 @@ class MemoryEditor(common.Editor):
 
     def _show_raw(self, cur_pos):
         def idle_show_raw(result):
-            gobject.idle_add(common.show_diff_blob,
+            GObject.idle_add(common.show_diff_blob,
                              _("Raw memory {number}").format(
                                  number=cur_pos), result)
 
@@ -703,7 +710,7 @@ class MemoryEditor(common.Editor):
 
             if len(raw.keys()) == 2:
                 diff = common.simple_diff(raw[loc_a], raw[loc_b])
-                gobject.idle_add(common.show_diff_blob,
+                GObject.idle_add(common.show_diff_blob,
                                  _("Diff of {a} and {b}").format(a=loc_a,
                                                                  b=loc_b),
                                  diff)
@@ -1059,13 +1066,13 @@ class MemoryEditor(common.Editor):
         def handler(mem, number):
             if not isinstance(mem, Exception):
                 if not mem.empty or self.show_empty:
-                    gobject.idle_add(self.set_memory, mem)
+                    GObject.idle_add(self.set_memory, mem)
             else:
                 mem = chirp_common.Memory()
                 mem.number = number
                 mem.name = "ERROR"
                 mem.empty = True
-                gobject.idle_add(self.set_memory, mem)
+                GObject.idle_add(self.set_memory, mem)
 
         for i in range(lo, hi+1):
             job = common.RadioJob(handler, "get_memory", i)

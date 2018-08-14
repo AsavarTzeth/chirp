@@ -14,9 +14,16 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import os
-import gtk
-import gobject
 import logging
+
+# Compatibility Layer (temporary)
+from gi import pygtkcompat
+pygtkcompat.enable()
+pygtkcompat.enable_gtk(version='3.0')
+
+import gtk
+
+from gi.repository import GObject
 
 from chirp import chirp_common, directory
 from chirp.drivers import generic_csv, generic_xml
@@ -28,16 +35,16 @@ LOG = logging.getLogger(__name__)
 
 class EditorSet(gtk.VBox):
     __gsignals__ = {
-        "want-close": (gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE, ()),
-        "status": (gobject.SIGNAL_RUN_LAST,
-                   gobject.TYPE_NONE,
-                   (gobject.TYPE_STRING,)),
-        "usermsg": (gobject.SIGNAL_RUN_LAST,
-                    gobject.TYPE_NONE,
-                    (gobject.TYPE_STRING,)),
-        "editor-selected": (gobject.SIGNAL_RUN_LAST,
-                            gobject.TYPE_NONE,
-                            (gobject.TYPE_STRING,)),
+        "want-close": (GObject.SignalFlags.RUN_LAST, None, ()),
+        "status": (GObject.SignalFlags.RUN_LAST,
+                   None,
+                   (GObject.TYPE_STRING,)),
+        "usermsg": (GObject.SignalFlags.RUN_LAST,
+                    None,
+                    (GObject.TYPE_STRING,)),
+        "editor-selected": (GObject.SignalFlags.RUN_LAST,
+                            None,
+                            (GObject.TYPE_STRING,)),
         }
 
     def _make_device_mapping_editors(self, device, devrthread, index):
@@ -263,7 +270,7 @@ class EditorSet(gtk.VBox):
         if count > 0:
             self.editor_changed()
             current_editor = self.get_current_editor()
-            gobject.idle_add(current_editor.prefill)
+            GObject.idle_add(current_editor.prefill)
 
         return count
 
@@ -389,7 +396,7 @@ class EditorSet(gtk.VBox):
         mem.freq = 146010000
 
         def cb(*args):
-            gobject.idle_add(self.editors["memedit0"].prefill)
+            GObject.idle_add(self.editors["memedit0"].prefill)
 
         job = common.RadioJob(cb, "set_memory", mem)
         job.set_desc(_("Priming memory"))

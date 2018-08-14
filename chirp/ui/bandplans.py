@@ -13,8 +13,15 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import gtk
 import logging
+
+# Compatibility Layer (temporary)
+from gi import pygtkcompat
+pygtkcompat.enable()
+pygtkcompat.enable_gtk(version='3.0')
+
+import gtk
+
 from chirp import bandplan, bandplan_na, bandplan_au
 from chirp import bandplan_iaru_r1, bandplan_iaru_r2, bandplan_iaru_r3
 from chirp.ui import inputdialog

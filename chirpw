@@ -140,11 +140,21 @@ a.show()
 if args.profile:
     import cProfile
     import pstats
+    # Compatibility Layer (temporary)
+    from gi import pygtkcompat
+    pygtkcompat.enable()
+    pygtkcompat.enable_gtk(version='3.0')
+
     import gtk
     cProfile.run("gtk.main()", "chirpw.stats")
     p = pstats.Stats("chirpw.stats")
     p.sort_stats("cumulative").print_stats(10)
 else:
+    # Compatibility Layer (temporary)
+    from gi import pygtkcompat
+    pygtkcompat.enable()
+    pygtkcompat.enable_gtk(version='3.0')
+
     import gtk
     gtk.main()
 

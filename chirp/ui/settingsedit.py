@@ -13,9 +13,16 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import gtk
-import gobject
 import logging
+
+# Compatibility Layer (temporary)
+from gi import pygtkcompat
+pygtkcompat.enable()
+pygtkcompat.enable_gtk(version='3.0')
+
+import gtk
+
+from gi.repository import GObject
 
 from chirp import chirp_common
 from chirp import settings
@@ -45,7 +52,7 @@ class SettingsEditor(common.Editor):
         self.root.pack_start(paned, 1, 1, 0)
 
         # The selection tree
-        self._store = gtk.TreeStore(gobject.TYPE_STRING, gobject.TYPE_INT)
+        self._store = gtk.TreeStore(GObject.TYPE_STRING, GObject.TYPE_INT)
         self._view = gtk.TreeView(self._store)
         self._view.get_selection().connect("changed", self._view_changed_cb)
         self._view.append_column(
@@ -225,7 +232,7 @@ class SettingsEditor(common.Editor):
         self._view.expand_all()
 
     def _get_settings_cb(self, settings):
-        gobject.idle_add(self._build_ui, settings)
+        GObject.idle_add(self._build_ui, settings)
 
     def _view_changed_cb(self, selection):
         (lst, iter) = selection.get_selected()
