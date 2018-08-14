@@ -131,6 +131,7 @@ def default_build():
                     ('share/chirp', xsd_files),
                     ('share/doc/chirp', ['COPYING']),
                     ('share/pixmaps', ['share/chirp.png']),
+                    ('share/icons/hicolor/scalable/apps', ['share/chirp.svg']),
                     ('share/man/man1', ["share/chirpw.1"]),
                     ('share/chirp/stock_configs', stock_configs),
                     ] + locale_files)
